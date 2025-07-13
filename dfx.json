@@ -1,0 +1,26 @@
+{
+  "canisters": {
+    "T-Go-backend": {
+      "main": "src/T-Go-backend/main.mo",
+      "type": "motoko"
+    },
+    "T-Go-frontend": {
+      "dependencies": [
+        "T-Go-backend"
+      ],
+      "source": [
+        "src/T-Go-frontend/dist"
+      ],
+      "type": "assets",
+      "workspace": "T-Go-frontend"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
