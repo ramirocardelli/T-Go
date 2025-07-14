@@ -4,7 +4,7 @@ import React, { useEffect, useRef } from 'react';
 function Map({mintingPartners}) {
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
-
+  console.log("Minting Partners:", mintingPartners);
   useEffect(() => {
     // Initialize map
     if (!mapInstanceRef.current) {
@@ -53,7 +53,7 @@ function Map({mintingPartners}) {
 
   return (
     <div>
-      <h2>Minting Partners Map</h2>
+      <h2>Minting Partners Map!</h2>
       <div 
         ref={mapRef} 
         style={{ height: '500px', border: '1px solid #ccc' }}

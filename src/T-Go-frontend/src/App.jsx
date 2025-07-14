@@ -7,6 +7,7 @@ import { Routes, Route, Link } from 'react-router-dom';
 import Home from './pages/Home';
 import LoginButton from './components/LoginButton';
 import Map from './pages/Map';
+import Profile from './pages/Profile';
 
 const network = process.env.DFX_NETWORK;
 const identityProvider =
@@ -65,7 +66,7 @@ function App() {
     <div>
       <div className='header'>
         <nav>
-          <Link to="/">Home</Link> | <Link to="/minting">Minting</Link> | <Link to="/gallery">Gallery</Link> | <Link to="/map">Map</Link>
+          <Link to="/">Home</Link> | <Link to="/minting">Minting</Link> | <Link to="/gallery">Gallery</Link> | <Link to="/map">Map</Link> | <Link to="/profile">Profile</Link>
         </nav>
         <LoginButton
           isAuthenticated={isAuthenticated}
@@ -77,14 +78,14 @@ function App() {
 
       {!isAuthenticated ? (
         <div>
-          <p>Please sign in to access the gallery.</p>
+          <p>Please sign in to access T-Go</p>
         </div>
       ) : (
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/minting" element={<Minting isPartner={isPartner} />} />
-          <Route path="/gallery" element={<Gallery />} />
+          <Route path="/map" element={<Map mintingPartners={mintingPartners}/>} />
           <Route path="/profile" element={<Profile />} />
         </Routes>
       )}
