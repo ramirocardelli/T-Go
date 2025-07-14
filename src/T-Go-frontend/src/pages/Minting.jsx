@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { T_Go_backend } from '../../../declarations/T-Go-backend';
 
-function Minting() {  
+function Minting({isPartner}) {  
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
 
@@ -36,6 +36,14 @@ function Minting() {
       setIsLoading(false);
     }
   };
+  if (!isPartner) {
+    return (
+      <div style={{ padding: '20px', textAlign: 'center' }}>
+        <h2>Minting is restricted to partners</h2>
+        <p>Please contact support if you believe you should have access.</p>
+      </div>
+    );
+  }
 
   return (
     <div style={{ padding: '20px' }}>
