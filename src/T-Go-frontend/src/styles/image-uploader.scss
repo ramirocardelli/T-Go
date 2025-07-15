@@ -1,0 +1,122 @@
+.image-uploader {
+  position: relative;
+  padding: 2rem;
+  border: 2px dashed rgba(255, 255, 255, 0.3);
+  border-radius: 1rem;
+  transition: all 0.3s ease;
+  text-align: center;
+  background-color: transparent;
+
+  &.drag-active {
+    border-color: #2dd4bf; // turquoise
+    background-color: rgba(45, 212, 191, 0.1);
+  }
+
+  &.has-image {
+    border-color: #2dd4bf;
+  }
+
+  .upload-instructions {
+    .upload-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 1rem;
+      background: linear-gradient(
+        to right,
+        rgba(45, 212, 191, 0.2),
+        rgba(255, 127, 80, 0.2)
+      );
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      svg {
+        color: #2dd4bf;
+      }
+    }
+
+    .upload-text {
+      color: #fff;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtext {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+    }
+
+    .browse-btn {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+    }
+  }
+
+  .image-preview {
+    position: relative;
+
+    img {
+      width: 100%;
+      height: 16rem;
+      object-fit: cover;
+      border-radius: 0.75rem;
+    }
+
+    .remove-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      width: 2rem;
+      height: 2rem;
+      background-color: #ef4444;
+      border: none;
+      border-radius: 50%;
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        background-color: #dc2626;
+      }
+    }
+
+    .upload-status {
+      position: absolute;
+      bottom: 0.5rem;
+      left: 0.5rem;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      padding: 0.25rem 0.75rem;
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      color: #fff;
+      font-size: 0.875rem;
+
+      .check {
+        color: #22c55e; // green
+        margin-right: 0.5rem;
+      }
+    }
+  }
+
+  .file-input {
+    display: none;
+  }
+}

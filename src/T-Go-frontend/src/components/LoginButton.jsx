@@ -2,13 +2,13 @@ function LoginButton({ isAuthenticated, login, logout }) {
   return (
     <>
       {isAuthenticated ? (
-        <button onClick={logout} className='logout-button'>
-          Logout
-        </button>
+        <div className="connect-wallet">
+          <button onClick={logout}>Logout</button>
+        </div>
       ) : (
-        <button onClick={login} className='logout-button'>
-          Login with Internet Identity
-        </button>
+        <div className="connect-wallet">
+          <button onClick={login}>Connect Wallet</button>
+        </div>
       )}
     </>
   );

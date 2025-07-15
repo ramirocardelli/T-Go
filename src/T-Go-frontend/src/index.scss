@@ -5,53 +5,11 @@ body {
   padding: 0;
 }
 
-img {
-  max-width: 50vw;
-  max-height: 25vw;
-  display: block;
-  margin: auto;
-}
-
-form {
-  display: flex;
-  justify-content: center;
-  gap: 0.5em;
-  flex-flow: row wrap;
-  max-width: 40vw;
-  margin: auto;
-  align-items: baseline;
-}
-
-button[type="submit"] {
-  padding: 5px 20px;
-  margin: 10px auto;
-  float: right;
-}
-
-#greeting {
-  margin: 10px auto;
-  padding: 10px 60px;
-  border: 1px solid #222;
-}
-
-#greeting:empty {
-  display: none;
-}
-
 .browser-warning {
   display: none;
 }
 
-.logout-button, .login-button {
-  background-color: #007bff;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.header{
+.header {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -73,4 +31,33 @@ button[type="submit"] {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.navbar-button {
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  transition: color 0.3s ease;
+  text-decoration: none;
+
+  &:hover {
+    color: white;
+  }
+}
+
+.my-gradient-background {
+  min-height: 100vh;
+  background-image: linear-gradient(
+    to bottom right,
+    #0f172a,
+    // slate-900
+    #1e3a8a,
+    // blue-900
+    #312e81 // indigo-900
+  );
 }

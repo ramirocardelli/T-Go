@@ -1,0 +1,111 @@
+.how-it-works {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 4rem 1rem;
+  color: white;
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .intro {
+    text-align: center;
+    margin-bottom: 4rem;
+
+    h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+
+      @media (min-width: 768px) {
+        font-size: 3rem;
+      }
+    }
+
+    p {
+      font-size: 1.25rem;
+      color: #aaa;
+      max-width: 32rem;
+      margin: 0 auto;
+    }
+  }
+
+  .steps {
+    display: grid;
+    gap: 2rem;
+
+    @media (min-width: 768px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .step-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 1.5rem;
+    padding: 2rem;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    transition: transform 0.3s ease;
+    color: #fff;
+
+    &:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .icon {
+      width: 4rem;
+      height: 4rem;
+      margin: 0 auto 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      color: #fff;
+
+      &.icon-step1 {
+        background: linear-gradient(to right, #3b82f6, #6366f1);
+      }
+
+      &.icon-step2 {
+        background: linear-gradient(to right, #6366f1, #14b8a6); // coral tone
+      }
+
+      &.icon-step3 {
+        background: linear-gradient(
+          to right,
+          #14b8a6,
+          #06b6d4
+        ); // turquoise tone
+      }
+
+      svg {
+        width: 2rem;
+        height: 2rem;
+      }
+    }
+
+    .step-label {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+
+      &.step1 {
+        color: #60a5fa;
+      }
+
+      &.step2 {
+        color: #14b8a6;
+      }
+
+      &.step3 {
+        color: #5eead4;
+      }
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 60;
+    }
+  }
+}

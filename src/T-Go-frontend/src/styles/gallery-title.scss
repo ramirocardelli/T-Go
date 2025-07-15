@@ -1,0 +1,33 @@
+.nft-section {
+  padding: 4rem 1rem;
+  text-align: center;
+
+  .nft-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .nft-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 1rem;
+
+    @media (min-width: 768px) {
+      font-size: 3.5rem;
+    }
+
+    .gradient-text {
+      background: linear-gradient(to right, #2dd4bf, #fb7185);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  }
+
+  .nft-subtitle {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.7);
+    max-width: 600px;
+    margin: 0 auto 2rem;
+  }
+}

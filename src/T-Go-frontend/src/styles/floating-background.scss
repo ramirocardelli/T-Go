@@ -1,0 +1,81 @@
+.floating-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+
+  .dot {
+    position: absolute;
+    border-radius: 50%;
+
+    &.dot1 {
+      top: 5rem;
+      left: 2.5rem;
+      width: 1rem;
+      height: 1rem;
+      background-color: rgba(64, 224, 208, 0.2); // turquoise-400
+      animation: pulse 2s infinite;
+    }
+
+    &.dot2 {
+      top: 10rem;
+      right: 5rem;
+      width: 1.5rem;
+      height: 1.5rem;
+      background-color: rgba(255, 127, 80, 0.2); // coral-400
+      animation: bounce 2s infinite;
+    }
+
+    &.dot3 {
+      bottom: 5rem;
+      left: 25%;
+      width: 0.75rem;
+      height: 0.75rem;
+      background-color: rgba(96, 165, 250, 0.2); // blue-400
+      animation: ping 1.5s infinite;
+    }
+
+    &.dot4 {
+      top: 33.3333%;
+      right: 33.3333%;
+      width: 1.25rem;
+      height: 1.25rem;
+      background-color: rgba(175, 238, 238, 0.2); // turquoise-300
+      animation: pulse 3s infinite;
+    }
+  }
+}
+
+// Animations
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes ping {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  75%,
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}

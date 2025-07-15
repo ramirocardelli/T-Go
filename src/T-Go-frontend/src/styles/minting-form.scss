@@ -1,0 +1,121 @@
+.card-container {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 1.5rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  max-width: 45%;
+
+  @media (max-width: 768px) {
+    max-width: calc(100% - 2rem);
+  }
+  margin: auto;
+}
+
+.card-header {
+  padding-bottom: 1.5rem;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: white;
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-right: 0.5rem;
+}
+
+.icon.sparkles {
+  color: #2dd4bf;
+}
+
+.icon.image,
+.icon.file-text,
+.icon.map-pin {
+  color: #2dd4bf;
+}
+
+.form-group {
+  margin-bottom: 2rem;
+}
+
+.label {
+  font-weight: 500;
+  color: white;
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.upload-area {
+  border: 2px dashed rgba(255, 255, 255, 0.3);
+  border-radius: 1rem;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.description-input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  border-radius: 0.75rem;
+  width: calc(100% - 2rem);
+  padding: 1rem;
+  height: 6rem;
+  resize: none;
+}
+
+.description-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.text-count {
+  text-align: right;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.destination-select {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  border-radius: 0.75rem;
+  width: 100%;
+  padding: 0.75rem;
+}
+
+.mint-button-wrapper {
+  padding-top: 1rem;
+}
+
+.mint-button {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 1rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(to right, #2dd4bf, #fb7185);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.mint-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.form-status {
+  text-align: center;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
+}
