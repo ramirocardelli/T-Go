@@ -2,19 +2,10 @@ import { MapPin, ImageIcon, Sparkles, FileText } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { X, Check, Camera, Upload } from "lucide-react";
 import { T_Go_backend } from "../../../declarations/T-Go-backend";
+import { AuthClient } from "@dfinity/auth-client";
+import { Principal } from "@dfinity/principal";
 
 function MintingHeader() {
-  // TODO: Replace with the actual locations
-  const mockLocations = [
-    { name: "Paris", value: "paris" },
-    { name: "New York", value: "new-york" },
-    { name: "Tokyo", value: "tokyo" },
-    { name: "Sydney", value: "sydney" },
-    { name: "Cape Town", value: "cape-town" },
-    { name: "Rio de Janeiro", value: "rio-de-janeiro" },
-    { name: "Moscow", value: "moscow" },
-    { name: "Dubai", value: "dubai" },
-  ];
   const [locations, setLocations] = useState([]);
   const [uploadedImage, setUploadedImage] = useState(null);
   const [dragActive, setDragActive] = useState(false);
@@ -24,10 +15,18 @@ function MintingHeader() {
     destination: "",
   });
   const fileInputRef = useRef(null);
-
   useEffect(() => {
-    // TODO: Fetch actual locations from the backend
-    setLocations(mockLocations);
+    const fetchData = async () => {
+      try {
+        const locations = await T_Go_backend.getAllLocations();
+        setLocations(locations);
+        console.log("Fetched locations:", locations);
+      } catch (error) {
+        console.error("Error fetching locations:", error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const handleFileInput = (e) => {
@@ -67,7 +66,8 @@ function MintingHeader() {
     }
   };
 
-  const isFormComplete = formData.image && formData.description.trim() && formData.destination;
+  const isFormComplete =
+    formData.image && formData.description.trim() && formData.destination;
 
   const handleDescriptionChange = (e) => {
     setFormData({ ...formData, description: e.target.value });
@@ -82,18 +82,24 @@ function MintingHeader() {
     // TODO: Check if everything is working correctly
     e.preventDefault();
     if (isSubmitting) return;
-    
+
     setIsSubmitting(true);
     try {
       // Convert image file to Uint8Array
       const imageBuffer = await formData.image.arrayBuffer();
       const imageBytes = new Uint8Array(imageBuffer);
-      
-      const result = await T_Go_backend.mintImage(formData.destination, imageBytes, formData.image.type);
+      const principal = (await AuthClient.create()).getIdentity().getPrincipal();
+      const result = await T_Go_backend.mintNFT(
+        principal,
+        imageBytes,
+        formData.description,
+        Principal.fromText(formData.destination),
+        formData.image.type,
+      );
       console.log("NFT minted successfully:", result);
-      
+
       // Redirect to profile page
-      window.location.href = '/profile';
+      window.location.href = "/profile";
     } catch (error) {
       console.error("Error minting NFT:", error);
       setIsSubmitting(false);
@@ -199,7 +205,10 @@ function MintingHeader() {
             >
               <option value="">Choose your destination</option>
               {locations.map((location) => (
-                <option key={location.value} value={location.value}>
+                <option
+                  key={location.id.toString()}
+                  value={location.id.toString()}
+                >
                   {location.name}
                 </option>
               ))}
@@ -222,8 +231,8 @@ function MintingHeader() {
               {isSubmitting
                 ? "Minting your NFT..."
                 : isFormComplete
-                ? "Ready to mint!"
-                : "Please fill in all fields to mint your NFT"}
+                  ? "Ready to mint!"
+                  : "Please fill in all fields to mint your NFT"}
             </p>
           </div>
         </form>

@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import LoginButton from "./LoginButton";
 
-function Header({ isAuthenticated, login, logout }) {
+function Header({ isAuthenticated, isMintingPartner, login, logout }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const toggleMobileMenu = () => {
@@ -37,10 +37,11 @@ function Header({ isAuthenticated, login, logout }) {
             <Link className="navbar-button" to="/profile">
               My NFTs
             </Link>
+            {isMintingPartner && (
             <Link className="navbar-button" to="/validation">
               Validation
             </Link>
-            
+            )}
           </nav>
 
           <div className="connect-wallet">

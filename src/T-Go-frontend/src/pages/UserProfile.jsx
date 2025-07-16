@@ -1,95 +1,78 @@
-import { useState } from "react";
-import { MapPin, Award, Clock, CheckCircle } from "lucide-react";
+import { useEffect, useState } from "react";
+import { MapPin, Award, Clock, CheckCircle, RefreshCw } from "lucide-react";
 import { Link } from "react-router-dom";
-
-const validatedNFTs = [
-  {
-    id: 1,
-    title: "Tokyo Neon Dreams",
-    location: "Shibuya, Tokyo",
-    image:
-      "https://postalmuseum.si.edu/sites/default/files/exhibitions/npm-2011_2005_302.jpg",
-    validatedDate: "2024-01-15",
-  },
-  {
-    id: 2,
-    title: "Mount Fuji Sunrise",
-    location: "Fujinomiya, Japan",
-    image:
-      "https://postalmuseum.si.edu/sites/default/files/exhibitions/npm-2011_2005_302.jpg",
-    validatedDate: "2024-01-10",
-  },
-  {
-    id: 3,
-    title: "Kyoto Temple Serenity",
-    location: "Kyoto, Japan",
-    image:
-      "https://postalmuseum.si.edu/sites/default/files/exhibitions/npm-2011_2005_302.jpg",
-    validatedDate: "2024-01-08",
-  },
-  {
-    id: 4,
-    title: "Osaka Street Food",
-    location: "Dotonbori, Osaka",
-    image:
-      "https://postalmuseum.si.edu/sites/default/files/exhibitions/npm-2011_2005_302.jpg",
-    validatedDate: "2024-01-05",
-  },
-  {
-    id: 5,
-    title: "Hiroshima Peace Memorial",
-    location: "Hiroshima, Japan",
-    image:
-      "https://postalmuseum.si.edu/sites/default/files/exhibitions/npm-2011_2005_302.jpg",
-    validatedDate: "2024-01-03",
-  },
-  {
-    id: 6,
-    title: "Nara Deer Park",
-    location: "Nara, Japan",
-    image:
-      "https://postalmuseum.si.edu/sites/default/files/exhibitions/npm-2011_2005_302.jpg",
-    validatedDate: "2024-01-01",
-  },
-];
-
-const pendingNFTs = [
-  {
-    id: 7,
-    title: "Seoul Night Market",
-    location: "Myeongdong, Seoul",
-    image:
-      "https://postalmuseum.si.edu/sites/default/files/exhibitions/npm-2011_2005_302.jpg",
-    submittedDate: "2024-01-20",
-  },
-  {
-    id: 8,
-    title: "Jeju Island Coastline",
-    location: "Jeju, South Korea",
-    image:
-      "https://postalmuseum.si.edu/sites/default/files/exhibitions/npm-2011_2005_302.jpg",
-    submittedDate: "2024-01-18",
-  },
-  {
-    id: 9,
-    title: "Busan Beach Sunset",
-    location: "Haeundae, Busan",
-    image:
-      "https://postalmuseum.si.edu/sites/default/files/exhibitions/npm-2011_2005_302.jpg",
-    submittedDate: "2024-01-16",
-  },
-  {
-    id: 10,
-    title: "Gyeongbokgung Palace",
-    location: "Seoul, South Korea",
-    image:
-      "https://postalmuseum.si.edu/sites/default/files/exhibitions/npm-2011_2005_302.jpg",
-    submittedDate: "2024-01-14",
-  },
-];
+import { T_Go_backend } from "../../../declarations/T-Go-backend";
+import { AuthClient } from "@dfinity/auth-client";
 
 function UserProfile() {
   const [activeTab, setActiveTab] = useState("validated");
+  const [pendingNFTs, setPendingNFTs] = useState([]);
+  const [validatedNFTs, setValidatedNFTs] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [locations, setLocations] = useState([]);
+
+  const displayImageFromBytes = (byteArray, mimeType) => {
+    const uint8Array = new Uint8Array(byteArray);
+    const blob = new Blob([uint8Array], { type: mimeType });
+    const imageUrl = URL.createObjectURL(blob);
+    return imageUrl;
+  };
+
+  const getDayFromTimestamp = (timestamp) => {
+    const date = new Date(Number(timestamp / 1000000n));
+    return date.toLocaleDateString("es-AR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  };
+
+  const getLocationById = (location) => {
+    const foundLocation = locations.find((loc) => loc.id.toString() === location.toString());
+    console.log("Location ID:", location.id, "Found Location:", foundLocation);
+    if (foundLocation) {
+      return foundLocation.name;
+    }
+    return "Undefined location";
+  };
+
+  const fetchNFTs = async () => {
+    try {
+      // TODO: Check if the NFTs information is correctly displayed
+      // TODO: Make it work with the NFTs of the caller, I don't think it is necessary to pass the user ID
+      const authClient = await AuthClient.create();
+      const principal = authClient.getIdentity().getPrincipal();
+      const myValidatedNFTs = await T_Go_backend.getMyNFTs(principal);
+      const myPendingNFTs = await T_Go_backend.getMySubmissions(principal);
+      const allLocations = await T_Go_backend.getAllLocations();
+      setValidatedNFTs(myValidatedNFTs);
+      setPendingNFTs(myPendingNFTs);
+      setLocations(allLocations);
+      setIsLoading(false);
+      console.log("Fetched Locations:", allLocations);
+      console.log("Fetched NFTs:", myValidatedNFTs);
+      console.log("Fetched Pending NFTs:", myPendingNFTs);
+    } catch (error) {
+      console.error("Error fetching NFTs:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchNFTs();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="validation-container">
+        <div className="loading-state">
+          <div className="loading-spinner">
+            <RefreshCw size={32} />
+          </div>
+          <p>Loading your NFTs...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="user-profile">
@@ -114,7 +97,10 @@ function UserProfile() {
             (nft) => {
               return (
                 <div className="nft-card" key={nft.id}>
-                  <img src={nft.image} alt={nft.title} />
+                  <img
+                    src={displayImageFromBytes(nft.image, nft.type)}
+                    alt={nft.description}
+                  />
                   <div className={`badge top-left ${activeTab}`}>
                     {activeTab === "validated" ? (
                       <CheckCircle size={12} />
@@ -128,16 +114,19 @@ function UserProfile() {
                   <div className="nft-content">
                     <h3>{nft.title}</h3>
                     <div className="location">
-                      <MapPin className="mappin" size={14} /> {nft.location}
+                      <MapPin className="mappin" size={14} />{" "}
+                      {getLocationById(nft.locationId)}
                     </div>
                     <div className="details">
                       {activeTab === "validated" ? (
                         <>
-                          <Award className="award" size={12} /> Validated {nft.validatedDate}
+                          <Award className="award" size={12} /> Validated{" "}
+                          {getDayFromTimestamp(nft.timestamp)}
                         </>
                       ) : (
                         <>
-                          <Clock className="clock" size={12} /> Submitted {nft.submittedDate}
+                          <Clock className="clock" size={12} /> Submitted{" "}
+                          {getDayFromTimestamp(nft.timestamp)}
                         </>
                       )}
                     </div>

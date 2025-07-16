@@ -20,8 +20,10 @@
 /* Global Styles for body and html */
 body {
   margin: 0;
-  font-family: 'Inter', sans-serif; /* Using Inter font as per instructions */
-  background-color: var(--background-dark); /* Default to dark mode background */
+  font-family: "Inter", sans-serif; /* Using Inter font as per instructions */
+  background-color: var(
+    --background-dark
+  ); /* Default to dark mode background */
   color: var(--text-dark); /* Default to dark mode text color */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -76,16 +78,10 @@ body {
 
 /* Stats Section */
 .stats-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
   gap: 1.5rem;
   margin-bottom: 3rem;
-  margin-left: 2rem;
-  margin-right: 2rem;
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
+  justify-content: center;
 }
 
 .stat-card {
@@ -94,6 +90,7 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 1rem;
   padding: 1.5rem;
+  min-width: 200px;
   text-align: center;
   transition: all 0.3s ease;
 
@@ -118,11 +115,11 @@ body {
   margin: 0;
 }
 
-/* Requests Grid - FIXED */
-.requests-grid {
+/* Submissions Grid - FIXED */
+.submissions-grid {
   display: grid;
   /* Use auto-fit to ensure cards fill available space, minmax for responsiveness */
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 2rem;
   padding-bottom: 2rem;
   margin-left: 2rem;
@@ -210,7 +207,7 @@ body {
   }
 }
 
-.card-content {
+.card-content-validation {
   padding: 1.5rem;
   flex-grow: 1;
 }
@@ -368,8 +365,12 @@ body {
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Empty State */
@@ -396,6 +397,57 @@ body {
   p {
     color: rgba(255, 255, 255, 0.7);
     margin: 0;
+  }
+}
+
+/* Not Partner Message */
+.not-partner-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 2rem;
+  padding: 3rem 2rem;
+  margin: 2rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+
+  svg {
+    color: #ef4444;
+    margin-bottom: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: white;
+    margin: 0 0 1rem 0;
+  }
+
+  p {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
+    line-height: 1.5;
+    max-width: 400px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 2rem 1.5rem;
+    margin: 1rem;
+    min-height: 50vh;
+
+    h3 {
+      font-size: 1.5rem;
+    }
+
+    p {
+      font-size: 1rem;
+    }
   }
 }
 

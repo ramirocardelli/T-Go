@@ -1,9 +1,6 @@
-import {
-  MapPin,
-  Calendar,
-} from "lucide-react";
+import { MapPin, Calendar } from "lucide-react";
 
-const NFTDialog = ({ selectedNFT, setSelectedNFT }) => {
+const NFTDialog = ({ selectedNFT, setSelectedNFT, locations }) => {
   // TODO: Check if the information is correctly displayed
   if (!selectedNFT) return null;
 
@@ -12,15 +9,23 @@ const NFTDialog = ({ selectedNFT, setSelectedNFT }) => {
     const blob = new Blob([uint8Array], { type: mimeType });
     const imageUrl = URL.createObjectURL(blob);
     return imageUrl;
-  }
+  };
 
   const getDayFromTimestamp = (timestamp) => {
     const date = new Date(Number(timestamp / 1000000n));
-    return date.toLocaleDateString('es-AR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
+    return date.toLocaleDateString("es-AR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
     });
+  };
+
+  const getLocationById = (locationId) => {
+    const location = locations.find((loc) => loc.id.toString() === locationId);
+    if (location) {
+      return location.name;
+    }
+    return "Undefined location";
   };
 
   return (
@@ -36,7 +41,7 @@ const NFTDialog = ({ selectedNFT, setSelectedNFT }) => {
           <div className="nft-dialog-image-wrapper">
             <div className="nft-dialog-image-gradient" />
             <img
-              src={displayImageFromBytes(selectedNFT.data)}
+              src={displayImageFromBytes(selectedNFT.image)}
               alt={selectedNFT.description}
               className="nft-dialog-image"
             />
@@ -53,7 +58,7 @@ const NFTDialog = ({ selectedNFT, setSelectedNFT }) => {
               <h3>Location</h3>
               <div className="nft-dialog-icon-text">
                 <MapPin className="nft-dialog-icon turquoise" />
-                <span>{selectedNFT.location}</span>
+                <span>{getLocationById(selectedNFT.locationId)}</span>
               </div>
             </div>
 
@@ -62,9 +67,7 @@ const NFTDialog = ({ selectedNFT, setSelectedNFT }) => {
                 <h3>Minted</h3>
                 <div className="nft-dialog-icon-text">
                   <Calendar className="nft-dialog-icon turquoise" />
-                  <span>
-                    {getDayFromTimestamp(selectedNFT.timestamp)}
-                  </span>
+                  <span>{getDayFromTimestamp(selectedNFT.timestamp)}</span>
                 </div>
               </div>
             </div>

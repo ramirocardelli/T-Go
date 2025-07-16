@@ -18,7 +18,7 @@ import "./styles/floating-background.scss";
 import "./styles/gallery-title.scss";
 import "./styles/nft-gallery.scss";
 import "./styles/NFTDialog.scss";
-import './styles/validation.scss';
+import "./styles/validation.scss";
 import "./styles/transfer.scss";
 import { BrowserRouter } from "react-router-dom";
 
