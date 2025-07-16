@@ -37,6 +37,10 @@ function Header({ isAuthenticated, login, logout }) {
             <Link className="navbar-button" to="/profile">
               My NFTs
             </Link>
+            <Link className="navbar-button" to="/validation">
+              Validation
+            </Link>
+            
           </nav>
 
           <div className="connect-wallet">

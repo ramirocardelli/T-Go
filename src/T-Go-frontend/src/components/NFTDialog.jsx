@@ -1,21 +1,11 @@
 import {
-  CheckCircle,
-  Clock,
   MapPin,
   Calendar,
-  Heart,
-  Eye,
-  Share2,
-  ExternalLink,
 } from "lucide-react";
 
 const NFTDialog = ({ selectedNFT, setSelectedNFT }) => {
+  // TODO: Check if the information is correctly displayed
   if (!selectedNFT) return null;
-
-  const getCategoryIcon = (category) => {
-    // Replace this with actual icon logic
-    return Calendar;
-  };
 
   const displayImageFromBytes = (byteArray, mimeType, imgElementId) => {
     const uint8Array = new Uint8Array(byteArray);
@@ -24,21 +14,30 @@ const NFTDialog = ({ selectedNFT, setSelectedNFT }) => {
     return imageUrl;
   }
 
+  const getDayFromTimestamp = (timestamp) => {
+    const date = new Date(Number(timestamp / 1000000n));
+    return date.toLocaleDateString('es-AR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+  };
+
   return (
     <div className="nft-dialog-backdrop" onClick={() => setSelectedNFT(null)}>
       <div
         className="nft-dialog-container"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="nft-dialog-title">{selectedNFT.title}</h2>
+        <h2 className="nft-dialog-title">Travel NFT</h2>
 
         <div className="nft-dialog-grid">
           {/* Image */}
           <div className="nft-dialog-image-wrapper">
             <div className="nft-dialog-image-gradient" />
             <img
-              src={displayImageFromBytes(selectedNFT.data) || "/placeholder.svg"}
-              alt={selectedNFT.title}
+              src={displayImageFromBytes(selectedNFT.data)}
+              alt={selectedNFT.description}
               className="nft-dialog-image"
             />
           </div>
@@ -64,7 +63,7 @@ const NFTDialog = ({ selectedNFT, setSelectedNFT }) => {
                 <div className="nft-dialog-icon-text">
                   <Calendar className="nft-dialog-icon turquoise" />
                   <span>
-                    {new Date(selectedNFT.mintedDate).toLocaleDateString()}
+                    {getDayFromTimestamp(selectedNFT.timestamp)}
                   </span>
                 </div>
               </div>

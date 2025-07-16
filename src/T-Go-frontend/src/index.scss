@@ -61,3 +61,105 @@ body {
     #312e81 // indigo-900
   );
 }
+
+// Add this to your main CSS file or create src/styles/auth.scss
+.auth-prompt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  padding: 2rem;
+}
+
+.auth-content {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 2rem;
+  padding: 3rem 2rem;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+
+  .auth-icon {
+    color: #14b8a6;
+    margin-bottom: 1.5rem;
+    
+    svg {
+      width: 64px;
+      height: 64px;
+    }
+  }
+
+  .auth-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(to right, #14b8a6, #f97316);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+  }
+
+  .auth-subtitle {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+
+  .auth-button {
+    background: linear-gradient(to right, #14b8a6, #f97316);
+    color: white;
+    border: none;
+    border-radius: 0.75rem;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 12px rgba(20, 184, 166, 0.3);
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(20, 184, 166, 0.4);
+      background: linear-gradient(to right, #0f766e, #ea580c);
+    }
+
+    &:active {
+      transform: translateY(0);
+      box-shadow: 0 4px 12px rgba(20, 184, 166, 0.3);
+    }
+  }
+
+  .auth-note {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+    margin: 0;
+    line-height: 1.4;
+  }
+}
+
+@media (max-width: 768px) {
+  .auth-content {
+    padding: 2rem 1.5rem;
+    margin: 1rem;
+
+    .auth-title {
+      font-size: 2rem;
+    }
+
+    .auth-subtitle {
+      font-size: 1rem;
+    }
+
+    .auth-button {
+      padding: 0.875rem 1.5rem;
+      font-size: 1rem;
+    }
+  }
+}

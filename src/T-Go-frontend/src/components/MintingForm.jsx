@@ -1,10 +1,11 @@
 import { MapPin, ImageIcon, Sparkles, FileText } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { X, Check, Camera, Upload } from "lucide-react";
 import { T_Go_backend } from "../../../declarations/T-Go-backend";
 
 function MintingHeader() {
-  const locations = [
+  // TODO: Replace with the actual locations
+  const mockLocations = [
     { name: "Paris", value: "paris" },
     { name: "New York", value: "new-york" },
     { name: "Tokyo", value: "tokyo" },
@@ -14,14 +15,20 @@ function MintingHeader() {
     { name: "Moscow", value: "moscow" },
     { name: "Dubai", value: "dubai" },
   ];
+  const [locations, setLocations] = useState([]);
   const [uploadedImage, setUploadedImage] = useState(null);
   const [dragActive, setDragActive] = useState(false);
-  const fileInputRef = useRef(null);
   const [formData, setFormData] = useState({
     image: null,
     description: "",
     destination: "",
   });
+  const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    // TODO: Fetch actual locations from the backend
+    setLocations(mockLocations);
+  }, []);
 
   const handleFileInput = (e) => {
     const file = e.target.files?.[0];
@@ -60,8 +67,7 @@ function MintingHeader() {
     }
   };
 
-  const isFormComplete =
-    formData.image && formData.description.trim() && formData.destination;
+  const isFormComplete = formData.image && formData.description.trim() && formData.destination;
 
   const handleDescriptionChange = (e) => {
     setFormData({ ...formData, description: e.target.value });
@@ -70,37 +76,14 @@ function MintingHeader() {
   const handleDestinationChange = (e) => {
     setFormData({ ...formData, destination: e.target.value });
   };
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
+    // TODO: Check if everything is working correctly
     e.preventDefault();
-
-    if (!isFormComplete) {
-      console.log("Form is incomplete, cannot submit");
-      return;
-    }
-
-    console.log("=== NFT MINTING FORM SUBMISSION ===");
-    console.log("Form Data:", {
-      image: {
-        file: formData.image,
-        name: formData.image?.name,
-        size: formData.image?.size,
-        type: formData.image?.type,
-        lastModified: formData.image?.lastModified,
-      },
-      description: formData.description,
-      destination: formData.destination,
-      destinationName: locations.find(
-        (loc) => loc.value === formData.destination
-      )?.name,
-    });
-    console.log("Image Preview URL:", uploadedImage);
-    console.log("Timestamp:", new Date().toISOString());
-    console.log("=====================================");
-
-    // Here you would typically call your backend API
-    // Example: await mintNFT(formData);
-    // Call the Motoko canister function
+    if (isSubmitting) return;
+    
+    setIsSubmitting(true);
     try {
       // Convert image file to Uint8Array
       const imageBuffer = await formData.image.arrayBuffer();
@@ -108,11 +91,12 @@ function MintingHeader() {
       
       const result = await T_Go_backend.mintImage(formData.destination, imageBytes, formData.image.type);
       console.log("NFT minted successfully:", result);
-      console.log(await T_Go_backend.getImageCount());
-      console.log(await T_Go_backend.getAllNFTs());
-      console.log(await T_Go_backend.getAllImages());
+      
+      // Redirect to profile page
+      window.location.href = '/profile';
     } catch (error) {
       console.error("Error minting NFT:", error);
+      setIsSubmitting(false);
     }
   };
 
@@ -226,16 +210,18 @@ function MintingHeader() {
             <button
               type="submit"
               className="mint-button"
-              disabled={!isFormComplete}
+              disabled={!isFormComplete || isSubmitting}
             >
               <Sparkles className="icon sparkles" />
-              Mint Travel NFT
+              {isSubmitting ? "Minting..." : "Mint Travel NFT"}
             </button>
           </div>
 
           <div className="form-status">
             <p>
-              {isFormComplete
+              {isSubmitting
+                ? "Minting your NFT..."
+                : isFormComplete
                 ? "Ready to mint!"
                 : "Please fill in all fields to mint your NFT"}
             </p>

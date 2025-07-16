@@ -7,18 +7,16 @@ function Map({ mintingPartners = [] }) {
   const [selectedPartner, setSelectedPartner] = useState(null);
   const [leafletReady, setLeafletReady] = useState(false);
   const [error, setError] = useState(null);
-
+  const [partners, setPartners] = useState([]);
+  // TODO: Replace with the actual partners
   // Sample data for when no partners are provided
-  const samplePartners = [
+  const mockPartners = [
     {
       id: 1,
       name: "Downtown Mint Hub",
       address: "123 Main St, New York, NY 10001",
       lat: 40.7128,
       lng: -74.0060,
-      type: "Premium Partner",
-      services: "NFT Minting, Verification, Support",
-      availability: "24/7 Available"
     },
     {
       id: 2,
@@ -26,9 +24,6 @@ function Map({ mintingPartners = [] }) {
       address: "456 Brooklyn Ave, Brooklyn, NY 11201",
       lat: 40.6892,
       lng: -73.9442,
-      type: "Creative Hub",
-      services: "Art NFTs, Digital Gallery",
-      availability: "Mon-Sat 9AM-9PM"
     },
     {
       id: 3,
@@ -36,13 +31,13 @@ function Map({ mintingPartners = [] }) {
       address: "789 Queens Blvd, Queens, NY 11373",
       lat: 40.7282,
       lng: -73.7949,
-      type: "Tech Partner",
-      services: "Gaming NFTs, Collectibles",
-      availability: "24/7 Available"
     }
   ];
 
-  const partners = mintingPartners.length > 0 ? mintingPartners : samplePartners;
+  useEffect(() => {
+    // TODO: Initialize partners with the actual data
+    setPartners(mockPartners);
+  }, [mintingPartners]);
 
   // Check for Leaflet availability with proper loading detection
   useEffect(() => {
@@ -422,9 +417,6 @@ function Map({ mintingPartners = [] }) {
 
             <div style={{ color: "rgba(255, 255, 255, 0.8)" }}>
               <p><strong>Address:</strong> {selectedPartner.address || "Not available"}</p>
-              <p><strong>Type:</strong> {selectedPartner.type || "Minting Partner"}</p>
-              <p><strong>Services:</strong> {selectedPartner.services || 'NFT Minting, Verification'}</p>
-              <p><strong>Hours:</strong> {selectedPartner.availability || "24/7 Available"}</p>
             </div>
           </div>
         </div>

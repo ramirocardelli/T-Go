@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { MapPin, Award, Clock, CheckCircle } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const validatedNFTs = [
   {
@@ -114,7 +115,7 @@ function UserProfile() {
               return (
                 <div className="nft-card" key={nft.id}>
                   <img src={nft.image} alt={nft.title} />
-                  <div className={"badge top-left " + activeTab}>
+                  <div className={`badge top-left ${activeTab}`}>
                     {activeTab === "validated" ? (
                       <CheckCircle size={12} />
                     ) : (
@@ -132,16 +133,21 @@ function UserProfile() {
                     <div className="details">
                       {activeTab === "validated" ? (
                         <>
-                          <Award className="award" size={12} /> Validated{" "}
-                          {nft.validatedDate}
+                          <Award className="award" size={12} /> Validated {nft.validatedDate}
                         </>
                       ) : (
                         <>
-                          <Clock className="clock" size={12} /> Submitted{" "}
-                          {nft.submittedDate}
+                          <Clock className="clock" size={12} /> Submitted {nft.submittedDate}
                         </>
                       )}
                     </div>
+                    {activeTab === "validated" && (
+                      <div className="nft-actions">
+                        <Link to={`/transfer?id=${nft.id}`}>
+                          <button className="transfer-button">Transfer</button>
+                        </Link>
+                      </div>
+                    )}
                   </div>
                 </div>
               );
