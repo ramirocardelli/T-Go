@@ -3,6 +3,7 @@ import { MapPin, Award, Clock, CheckCircle, RefreshCw } from "lucide-react";
 import { Link } from "react-router-dom";
 import { T_Go_backend } from "../../../declarations/T-Go-backend";
 import { AuthClient } from "@dfinity/auth-client";
+import { displayImageFromBytes, formatDate, formatTime, getLocationById } from "../lib/utils";
 
 function UserProfile() {
   const [activeTab, setActiveTab] = useState("validated");
@@ -10,31 +11,7 @@ function UserProfile() {
   const [validatedNFTs, setValidatedNFTs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [locations, setLocations] = useState([]);
-
-  const displayImageFromBytes = (byteArray, mimeType) => {
-    const uint8Array = new Uint8Array(byteArray);
-    const blob = new Blob([uint8Array], { type: mimeType });
-    const imageUrl = URL.createObjectURL(blob);
-    return imageUrl;
-  };
-
-  const getDayFromTimestamp = (timestamp) => {
-    const date = new Date(Number(timestamp / 1000000n));
-    return date.toLocaleDateString("es-AR", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
-  };
-
-  const getLocationById = (location) => {
-    const foundLocation = locations.find((loc) => loc.id.toString() === location.toString());
-    console.log("Location ID:", location.id, "Found Location:", foundLocation);
-    if (foundLocation) {
-      return foundLocation.name;
-    }
-    return "Undefined location";
-  };
+  const [principal, setPrincipal] = useState("");
 
   const fetchNFTs = async () => {
     try {
@@ -45,6 +22,7 @@ function UserProfile() {
       const myValidatedNFTs = await T_Go_backend.getMyNFTs(principal);
       const myPendingNFTs = await T_Go_backend.getMySubmissions(principal);
       const allLocations = await T_Go_backend.getAllLocations();
+      setPrincipal(principal.toText());
       setValidatedNFTs(myValidatedNFTs);
       setPendingNFTs(myPendingNFTs);
       setLocations(allLocations);
@@ -76,7 +54,23 @@ function UserProfile() {
 
   return (
     <div className="user-profile">
+      <h1 className="profile-title">My NFTs</h1>
+      <p className="profile-description">
+        Welcome! Here are your NFTs.
+      </p>
+      <p className="profile-principal">
+        Your Principal ID: <span className="principal-id">{principal}</span>
+      </p>
+        {validatedNFTs.length === 0 && pendingNFTs.length === 0 ? (
+          <div className="no-nfts">
+            <p>You have no NFTs yet.</p>
+            <Link to="/mint">
+              <button className="mint-button">Mint Your First NFT</button>
+            </Link>
+          </div>
+        ) : (
       <section className="nft-tabs">
+
         <div className="tab-header">
           <button
             className={activeTab === "validated" ? "active" : ""}
@@ -115,18 +109,18 @@ function UserProfile() {
                     <h3>{nft.title}</h3>
                     <div className="location">
                       <MapPin className="mappin" size={14} />{" "}
-                      {getLocationById(nft.locationId)}
+                      {getLocationById(locations, nft.location)}
                     </div>
                     <div className="details">
                       {activeTab === "validated" ? (
                         <>
                           <Award className="award" size={12} /> Validated{" "}
-                          {getDayFromTimestamp(nft.timestamp)}
+                          {formatDate(nft.timestamp)} - {formatTime(nft.timestamp)}
                         </>
                       ) : (
                         <>
                           <Clock className="clock" size={12} /> Submitted{" "}
-                          {getDayFromTimestamp(nft.timestamp)}
+                          {formatDate(nft.timestamp)} - {formatTime(nft.timestamp)}
                         </>
                       )}
                     </div>
@@ -144,6 +138,7 @@ function UserProfile() {
           )}
         </div>
       </section>
+  )}
     </div>
   );
 }

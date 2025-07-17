@@ -106,12 +106,6 @@ actor NFTMinting {
         locationNameToPrincipal.put(location.name, location.id);
         true
     };
-
-    // Add a minting partner (location that can approve/reject submissions)
-    public func addMintingPartner(partnerId: Principal) : async Bool {
-        mintingPartners.put(partnerId, true);
-        true
-    };
     
     // Remove a minting partner
     public func removeMintingPartner(partnerId: Principal) : async Bool {

@@ -7,7 +7,7 @@ function Footer() {
         <div className="footer-grid">
           <div className="footer-brand">
             <div className="logo">
-              <div className="logo-icon">
+              <div className="logo-icon-footer">
                 <span>🌐</span>
               </div>
               <span className="logo-text">T-Go</span>

@@ -1,32 +1,9 @@
 import { MapPin, Calendar } from "lucide-react";
+import { displayImageFromBytes, formatDate, formatTime, getLocationById } from "../lib/utils";
 
 const NFTDialog = ({ selectedNFT, setSelectedNFT, locations }) => {
   // TODO: Check if the information is correctly displayed
   if (!selectedNFT) return null;
-
-  const displayImageFromBytes = (byteArray, mimeType, imgElementId) => {
-    const uint8Array = new Uint8Array(byteArray);
-    const blob = new Blob([uint8Array], { type: mimeType });
-    const imageUrl = URL.createObjectURL(blob);
-    return imageUrl;
-  };
-
-  const getDayFromTimestamp = (timestamp) => {
-    const date = new Date(Number(timestamp / 1000000n));
-    return date.toLocaleDateString("es-AR", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
-  };
-
-  const getLocationById = (locationId) => {
-    const location = locations.find((loc) => loc.id.toString() === locationId);
-    if (location) {
-      return location.name;
-    }
-    return "Undefined location";
-  };
 
   return (
     <div className="nft-dialog-backdrop" onClick={() => setSelectedNFT(null)}>
@@ -58,7 +35,7 @@ const NFTDialog = ({ selectedNFT, setSelectedNFT, locations }) => {
               <h3>Location</h3>
               <div className="nft-dialog-icon-text">
                 <MapPin className="nft-dialog-icon turquoise" />
-                <span>{getLocationById(selectedNFT.locationId)}</span>
+                <span>{getLocationById(locations, selectedNFT.location)}</span>
               </div>
             </div>
 
@@ -67,7 +44,11 @@ const NFTDialog = ({ selectedNFT, setSelectedNFT, locations }) => {
                 <h3>Minted</h3>
                 <div className="nft-dialog-icon-text">
                   <Calendar className="nft-dialog-icon turquoise" />
-                  <span>{getDayFromTimestamp(selectedNFT.timestamp)}</span>
+
+                  <span>
+            {formatDate(selectedNFT.timestamp)}
+            {" at "}
+            {formatTime(selectedNFT.timestamp)}</span>
                 </div>
               </div>
             </div>

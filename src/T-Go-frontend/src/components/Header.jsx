@@ -18,6 +18,9 @@ function Header({ isAuthenticated, isMintingPartner, login, logout }) {
       <div className="container">
         <div className="header-inner">
           <div className="logo">
+            <div className="logo-icon">
+              <span>🌐</span>
+            </div>
             <span className="title">T-Go</span>
           </div>
 

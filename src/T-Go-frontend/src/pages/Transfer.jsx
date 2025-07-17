@@ -4,6 +4,7 @@ import { MapPin, Award, Clock, ArrowRight, User, Send } from "lucide-react";
 import { T_Go_backend } from "../../../declarations/T-Go-backend";
 import { Principal } from "@dfinity/principal";
 import { AuthClient } from "@dfinity/auth-client";
+import { displayImageFromBytes, getLocationById } from "../lib/utils";
 
 // TODO: Replace with the actual NFT data
 const NFT = {
@@ -27,21 +28,6 @@ function Transfer() {
   const [locations, setLocations] = useState([]);
   const nftId = searchParams.get("id");
   const navigate = useNavigate();
-
-  const displayImageFromBytes = (byteArray, mimeType) => {
-    const uint8Array = new Uint8Array(byteArray);
-    const blob = new Blob([uint8Array], { type: mimeType });
-    const imageUrl = URL.createObjectURL(blob);
-    return imageUrl;
-  };
-
-  const getLocationById = (locationId) => {
-    const location = locations.find((loc) => loc.id.toString() === locationId);
-    if (location) {
-      return location.name;
-    }
-    return "Undefined location";
-  };
 
   useEffect(() => {
     // Simulate fetching NFT data
@@ -146,7 +132,7 @@ function Transfer() {
               <h3>{nft.description}</h3>
               <div className="location">
                 <MapPin className="mappin" size={14} />
-                {getLocationById(nft.locationId)}
+                {getLocationById(locations, nft.location)}
               </div>
               <div className="details">
                 <div>

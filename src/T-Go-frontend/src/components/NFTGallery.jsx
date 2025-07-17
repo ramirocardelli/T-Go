@@ -1,21 +1,6 @@
+import { displayImageFromBytes, getLocationById } from "../lib/utils";
+
 function NFTGallery({ displayedNFTs, setSelectedNFT, locations }) {
-  // TODO: Check if the NFTs information is correctly displayed
-
-  const displayImageFromBytes = (byteArray, mimeType) => {
-    const uint8Array = new Uint8Array(byteArray);
-    const blob = new Blob([uint8Array], { type: mimeType });
-    const imageUrl = URL.createObjectURL(blob);
-    return imageUrl;
-  };
-
-  const getLocationById = (locationId) => {
-    console.log("Getting location for ID:", locationId);
-    const location = locations.find((loc) => loc.id.toString() === locationId);
-    if (location) {
-      return location.name;
-    }
-    return "Undefined location";
-  };
 
   return (
     <section className="nft-gallery-section">
@@ -47,7 +32,7 @@ function NFTGallery({ displayedNFTs, setSelectedNFT, locations }) {
                 <div className="nft-card-body">
                   <h3 className="nft-title">{nft.description}</h3>
                   <p className="nft-location">
-                    📍 {getLocationById(nft.locationId)}
+                    📍 {getLocationById(locations, nft.location)}
                   </p>
 
                   <div className="nft-user">

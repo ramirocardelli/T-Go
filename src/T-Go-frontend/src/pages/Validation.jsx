@@ -11,28 +11,12 @@ import {
 import { T_Go_backend } from "../../../declarations/T-Go-backend";
 import { AuthClient } from "@dfinity/auth-client";
 import { Principal } from "@dfinity/principal";
-// Assuming '../styles/validation.scss' is compiled to CSS and available
-// If not, you might need to embed the CSS directly or ensure your build process handles SCSS.
+import { displayImageFromBytes, formatDate, formatTime, getLocationById } from "../lib/utils";
 
 function Validation({isMintingPartner}) {
   const [submissions, setSubmissions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [locations, setLocations] = useState([]);
-
-  const displayImageFromBytes = (byteArray, mimeType) => {
-    const uint8Array = new Uint8Array(byteArray);
-    const blob = new Blob([uint8Array], { type: mimeType });
-    const imageUrl = URL.createObjectURL(blob);
-    return imageUrl;
-  };
-
-  const getLocationById = (locationId) => {
-    const location = locations.find((loc) => loc.id.toString() === locationId);
-    if (location) {
-      return location.name;
-    }
-    return "Undefined location";
-  };
 
   useEffect(() => {
     const fetchSubmissions = async () => {
@@ -144,8 +128,7 @@ function Validation({isMintingPartner}) {
               key={submission.id}
               submission={submission}
               onAction={handleAction}
-              getLocationById={getLocationById}
-              displayImageFromBytes={displayImageFromBytes}
+              locations={locations}
             />
           ))
         )}
@@ -154,38 +137,21 @@ function Validation({isMintingPartner}) {
   );
 }
 
-function SubmissionCard({ submission, onAction, getLocationById, displayImageFromBytes }) {
-  const formatDate = (timestamp) => {
-    console.log("Formatting date for timestamp:", timestamp);
-    return new Date(timestamp/1000000).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
-  const formatTime = (timestamp) => {
-    const date = new Date(Number(timestamp)/1000000);
-    return date.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
+function SubmissionCard({ submission, onAction, locations }) {
   return (
     <div className="card-container-validation">
       <div className="card-content-validation">
         <div className="location-info">
           <MapPin size={16} />
-          <span>{getLocationById(submission.locationId)}</span>
+          <span>{getLocationById(locations, submission.location.toText())}</span>
         </div>
 
         <div className="visit-time">
           <Clock size={16} />
           <span>
-            {formatDate(submission.timestamp.toString())}
+            {formatDate(submission.timestamp)}
             {" at "}
-            {formatTime(submission.timestamp.toString())}
+            {formatTime(submission.timestamp)}
           </span>
         </div>
         {submission.description && (
@@ -202,7 +168,7 @@ function SubmissionCard({ submission, onAction, getLocationById, displayImageFro
               submission.image,
               submission.contentType,
             )}
-            alt={`${submission.owner.toString()}'s visit to ${getLocationById(submission.locationId)}`}
+            alt={`${submission.owner.toString()}'s visit to ${getLocationById(locations, submission.location)}`}
             onError={(e) => {
               e.target.onerror = null;
               e.target.src =

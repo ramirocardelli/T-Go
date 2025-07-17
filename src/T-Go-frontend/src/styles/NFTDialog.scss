@@ -94,7 +94,7 @@
 
 .nft-dialog-icon-text {
   display: flex;
-  align-items: center;
+  align-items: center;;
 
   .nft-dialog-icon {
     width: 1.25rem;
@@ -104,5 +104,10 @@
 
   .turquoise {
     color: #4fd1c5;
+  }
+
+  span {
+    font-size: 1rem;
+    white-space: nowrap;
   }
 }
