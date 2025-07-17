@@ -62,7 +62,6 @@ useEffect(() => {
   async function updateActor() {
     const authClient = await AuthClient.create();
     const identity = authClient.getIdentity();
-    console.log("Principal:", identity.getPrincipal().toText());
     const actor = createActor(canisterId, {
       agentOptions: {
         identity,

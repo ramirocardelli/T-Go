@@ -14,8 +14,6 @@ const displayImageFromBytes = (byteArray, mimeType, imgElementId) => {
 };
 
 const formatDate = (timestamp) => {
-  console.log("Formatting date for timestamp:", timestamp);
-  // Convert BigInt to Number AFTER dividing to avoid precision issues
   const millis = Number(timestamp / 1000000n);
   return new Date(millis).toLocaleDateString("en-US", {
     year: "numeric",

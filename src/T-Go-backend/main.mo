@@ -64,6 +64,19 @@ actor NFTMinting {
     // Map location names to Principal IDs for validation
     private var locationNameToPrincipal = HashMap.HashMap<Text, Principal>(10, Text.equal, Text.hash);
     
+    // Track user NFTs per location to enforce one NFT per location limit
+    private var userLocationNFTs = HashMap.HashMap<(Principal, Principal), Bool>(10, 
+        func(x: (Principal, Principal), y: (Principal, Principal)) : Bool { 
+            Principal.equal(x.0, y.0) and Principal.equal(x.1, y.1) 
+        }, 
+        func(x: (Principal, Principal)) : Nat32 { 
+            let hash1 = Principal.hash(x.0);
+            let hash2 = Principal.hash(x.1);
+            // Use XOR to combine hashes to avoid overflow
+            hash1 ^ hash2
+        }
+    );
+    
     // System upgrade handling
     system func preupgrade() {
         // Convert HashMaps to stable arrays for upgrade
@@ -97,6 +110,24 @@ actor NFTMinting {
         }
     };
 
+    // Helper function to check if user already has an NFT at this location
+    private func userHasNFTAtLocation(user: Principal, location: Principal) : Bool {
+        switch (userLocationNFTs.get((user, location))) {
+            case (?true) { true };
+            case _ { false };
+        }
+    };
+
+    // Helper function to check if user already has a submission at this location
+    private func userHasSubmissionAtLocation(user: Principal, location: Principal) : Bool {
+        for ((_, submission) in submissions.entries()) {
+            if (Principal.equal(submission.owner, user) and Principal.equal(submission.location, location)) {
+                return true;
+            };
+        };
+        false
+    };
+
     
     // Admin function to add locations and minting partners
     public func addLocation(location: Location) : async Bool {
@@ -107,9 +138,17 @@ actor NFTMinting {
         true
     };
     
-    // Remove a minting partner
+    // Remove a minting partner and its location
     public func removeMintingPartner(partnerId: Principal) : async Bool {
         mintingPartners.delete(partnerId);
+        // Also remove the location with the same ID
+        switch (locations.get(partnerId)) {
+            case (?location) {
+                locations.delete(partnerId);
+                locationNameToPrincipal.delete(location.name);
+            };
+            case null { /* Location not found, continue */ };
+        };
         true
     };
 
@@ -148,7 +187,7 @@ actor NFTMinting {
         nfts.get(id)
     };
     
-    // Submit an NFT for minting (creates a submission)
+    // Submit an NFT for minting (creates a submission) - one per user per location
     public func mintNFT(
         owner: Principal,
         image: Blob,
@@ -159,6 +198,16 @@ actor NFTMinting {
         // Validate location exists
         if (not isValidLocation(location)) {
             return #err("Invalid location ID");
+        };
+        
+        // Check if user already has an NFT at this location
+        if (userHasNFTAtLocation(owner, location)) {
+            return #err("You already have an NFT at this location");
+        };
+        
+        // Check if user already has a pending submission at this location
+        if (userHasSubmissionAtLocation(owner, location)) {
+            return #err("You already have a pending submission at this location");
         };
         
         let now = Time.now();
@@ -197,6 +246,10 @@ actor NFTMinting {
                     timestamp = nft.timestamp; // Keep original timestamp
                 };
                 
+                // Update user location tracking
+                userLocationNFTs.delete((owner, nft.location));
+                userLocationNFTs.put((to, nft.location), true);
+                
                 nfts.put(id, updatedNFT);
                 #ok(updatedNFT)
             };
@@ -234,6 +287,10 @@ actor NFTMinting {
                 // Add to NFTs and remove from submissions
                 nfts.put(nextNFTId, nft);
                 submissions.delete(id);
+                
+                // Track that this user now has an NFT at this location
+                userLocationNFTs.put((submission.owner, submission.location), true);
+                
                 nextNFTId += 1;
                 
                 #ok(nft)
@@ -276,30 +333,6 @@ actor NFTMinting {
         Iter.toArray(submissions.vals())
     };
     
-    public query func getNFTsByOwner(owner: Principal) : async [NFT] {
-        let ownerNFTs = Buffer.Buffer<NFT>(0);
-        
-        for ((_, nft) in nfts.entries()) {
-            if (Principal.equal(nft.owner, owner)) {
-                ownerNFTs.add(nft);
-            };
-        };
-        
-        Buffer.toArray(ownerNFTs)
-    };
-    
-    public query func getSubmissionsByOwner(owner: Principal) : async [Submission] {
-        let ownerSubmissions = Buffer.Buffer<Submission>(0);
-        
-        for ((_, submission) in submissions.entries()) {
-            if (Principal.equal(submission.owner, owner)) {
-                ownerSubmissions.add(submission);
-            };
-        };
-        
-        Buffer.toArray(ownerSubmissions)
-    };
-
     public func getMyNFTs(owner: Principal) : async [NFT] {
         let ownerNFTs = Buffer.Buffer<NFT>(0);
         for ((_, nft) in nfts.entries()) {
@@ -344,23 +377,5 @@ actor NFTMinting {
         };
         
         Buffer.toArray(locationSubmissions)
-    };
-    
-    // Get all submissions for a location (for minting partners to manage)
-    public query func getSubmissionsForLocation(location: Principal) : async [Submission] {
-        let locationSubmissions = Buffer.Buffer<Submission>(0);
-        
-        for ((_, submission) in submissions.entries()) {
-            if (Principal.equal(submission.location, location)) {
-                locationSubmissions.add(submission);
-            };
-        };
-        
-        Buffer.toArray(locationSubmissions)
-    };
-    
-    // Helper function to get current timestamp
-    public query func getCurrentTime() : async Int {
-        Time.now()
     };
 }

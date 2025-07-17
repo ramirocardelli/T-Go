@@ -17,7 +17,6 @@ function Gallery() {
       const nfts = await T_Go_backend.getAllNFTs();
       setNFTs(nfts);
       setIsLoading(false);
-      console.log("Fetched NFTs:", nfts);
     } catch (error) {
       console.error("Error fetching NFTs:", error);
     }
@@ -27,7 +26,6 @@ function Gallery() {
     try {
       const locations = await T_Go_backend.getAllLocations();
       setLocations(locations);
-      console.log("Fetched Locations:", locations);
     } catch (error) {
       console.error("Error fetching locations:", error);
     }

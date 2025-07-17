@@ -27,9 +27,6 @@ function UserProfile() {
       setPendingNFTs(myPendingNFTs);
       setLocations(allLocations);
       setIsLoading(false);
-      console.log("Fetched Locations:", allLocations);
-      console.log("Fetched NFTs:", myValidatedNFTs);
-      console.log("Fetched Pending NFTs:", myPendingNFTs);
     } catch (error) {
       console.error("Error fetching NFTs:", error);
     }

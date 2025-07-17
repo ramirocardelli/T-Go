@@ -9,6 +9,7 @@ function MintingHeader() {
   const [locations, setLocations] = useState([]);
   const [uploadedImage, setUploadedImage] = useState(null);
   const [dragActive, setDragActive] = useState(false);
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     image: null,
     description: "",
@@ -20,7 +21,6 @@ function MintingHeader() {
       try {
         const locations = await T_Go_backend.getAllLocations();
         setLocations(locations);
-        console.log("Fetched locations:", locations);
       } catch (error) {
         console.error("Error fetching locations:", error);
       }
@@ -96,13 +96,17 @@ function MintingHeader() {
         Principal.fromText(formData.destination),
         formData.image.type,
       );
-      console.log("NFT minted successfully:", result);
-
-      // Redirect to profile page
-      window.location.href = "/profile";
-    } catch (error) {
-      console.error("Error minting NFT:", error);
-      setIsSubmitting(false);
+      if (!result.err) {
+        console.log("NFT minted successfully:", result);
+        window.location.href = "/profile";
+    } else {
+      console.error("Failed to mint NFT");
+        setIsSubmitting(false);
+        setError(result.err);
+    }
+  } catch (error) {
+    console.error("Error minting NFT:", error);
+    setIsSubmitting(false);
     }
   };
 
@@ -226,6 +230,7 @@ function MintingHeader() {
             </button>
           </div>
 
+          {error && <div className="error-message">{error}</div>}
           <div className="form-status">
             <p>
               {isSubmitting

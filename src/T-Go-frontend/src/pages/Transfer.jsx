@@ -79,7 +79,6 @@ function Transfer() {
       navigate("/profile?transfer=success");
     } catch (err) {
       setError("Transfer failed. Please try again.");
-      console.log(err);
     } finally {
       setIsTransferring(false);
     }
