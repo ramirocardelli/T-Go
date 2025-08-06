@@ -3,14 +3,13 @@ import { MapPin, Award, Clock, CheckCircle, RefreshCw } from "lucide-react";
 import { Link } from "react-router-dom";
 import { T_Go_backend } from "../../../declarations/T-Go-backend";
 import { AuthClient } from "@dfinity/auth-client";
-import { displayImageFromBytes, formatDate, formatTime, getLocationById } from "../lib/utils";
+import { displayImageFromBytes, formatDate, formatTime } from "../lib/utils";
 
 function UserProfile() {
   const [activeTab, setActiveTab] = useState("validated");
   const [pendingNFTs, setPendingNFTs] = useState([]);
   const [validatedNFTs, setValidatedNFTs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [locations, setLocations] = useState([]);
   const [principal, setPrincipal] = useState("");
 
   const fetchNFTs = async () => {
@@ -19,14 +18,13 @@ function UserProfile() {
       // TODO: Make it work with the NFTs of the caller, I don't think it is necessary to pass the user ID
       const authClient = await AuthClient.create();
       const principal = authClient.getIdentity().getPrincipal();
-      const myValidatedNFTs = await T_Go_backend.getMyNFTs(principal);
-      const myPendingNFTs = await T_Go_backend.getMySubmissions(principal);
-      const allLocations = await T_Go_backend.getAllLocations();
+      const myValidatedNFTs = await T_Go_backend.getNFTsOwnedByWithLocationNames(principal);
+      const myPendingNFTs = await T_Go_backend.getSubmissionsOwnedByWithLocationNames(principal);
       setPrincipal(principal.toText());
       setValidatedNFTs(myValidatedNFTs);
       setPendingNFTs(myPendingNFTs);
-      setLocations(allLocations);
       setIsLoading(false);
+      console.log("Fetched NFTs:", myValidatedNFTs, myPendingNFTs);
     } catch (error) {
       console.error("Error fetching NFTs:", error);
     }
@@ -106,7 +104,7 @@ function UserProfile() {
                     <h3>{nft.title}</h3>
                     <div className="location">
                       <MapPin className="mappin" size={14} />{" "}
-                      {getLocationById(locations, nft.location)}
+                      {nft.locationName}
                     </div>
                     <div className="details">
                       {activeTab === "validated" ? (

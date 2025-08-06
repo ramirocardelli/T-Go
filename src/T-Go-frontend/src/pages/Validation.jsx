@@ -61,6 +61,7 @@ function Validation({isMintingPartner}) {
     }
     // Remove the submission from the list to hot reload the components
     setSubmissions((prev) => prev.filter((sub) => sub.id !== submissionId));
+    console.log(`Submission ${submissionId} ${action}`);
   };
 
   if (!isMintingPartner) {

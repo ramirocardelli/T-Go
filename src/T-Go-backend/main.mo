@@ -43,6 +43,28 @@ actor NFTMinting {
         timestamp: Int; // Unix timestamp in nanoseconds when submission was created
     };
     
+    public type NFTWithLocationName = {
+        id: Nat;
+        image: Blob;
+        description: Text;
+        location: Principal;
+        locationName: Text;
+        contentType: Text;
+        owner: Principal;
+        timestamp: Int;
+    };
+    
+    public type SubmissionWithLocationName = {
+        id: Nat;
+        image: Blob;
+        description: Text;
+        location: Principal;
+        locationName: Text;
+        contentType: Text;
+        owner: Principal;
+        timestamp: Int;
+    };
+    
     // Storage
     private stable var nextNFTId: Nat = 0;
     private stable var nextSubmissionId: Nat = 0;
@@ -188,7 +210,7 @@ actor NFTMinting {
     };
     
     // Submit an NFT for minting (creates a submission) - one per user per location
-    public func mintNFT(
+    public func createSubmission(
         owner: Principal,
         image: Blob,
         description: Text,
@@ -324,6 +346,88 @@ actor NFTMinting {
         }
     };
     
+    // Get all NFTs with their location names
+    public query func getAllNFTsWithLocationNames() : async [NFTWithLocationName] {
+        let nftsWithNames = Buffer.Buffer<NFTWithLocationName>(0);
+        
+        for ((_, nft) in nfts.entries()) {
+            let locationName = switch (locations.get(nft.location)) {
+                case (?location) { location.name };
+                case null { "Unknown Location" };
+            };
+            
+            let nftWithLocationName: NFTWithLocationName = {
+                id = nft.id;
+                image = nft.image;
+                description = nft.description;
+                location = nft.location;
+                locationName = locationName;
+                contentType = nft.contentType;
+                owner = nft.owner;
+                timestamp = nft.timestamp;
+            };
+            
+            nftsWithNames.add(nftWithLocationName);
+        };
+        
+        Buffer.toArray(nftsWithNames)
+    };
+    
+    // Get user's NFTs with their location names
+    public func getNFTsOwnedByWithLocationNames(owner: Principal) : async [NFTWithLocationName] {
+        let ownerNFTs = Buffer.Buffer<NFTWithLocationName>(0);
+        
+        for ((_, nft) in nfts.entries()) {
+            if (Principal.equal(nft.owner, owner)) {
+                let locationName = switch (locations.get(nft.location)) {
+                    case (?location) { location.name };
+                    case null { "Unknown Location" };
+                };
+                
+                let nftWithLocationName: NFTWithLocationName = {
+                    id = nft.id;
+                    image = nft.image;
+                    description = nft.description;
+                    location = nft.location;
+                    locationName = locationName;
+                    contentType = nft.contentType;
+                    owner = nft.owner;
+                    timestamp = nft.timestamp;
+                };
+                
+                ownerNFTs.add(nftWithLocationName);
+            };
+        };
+        
+        Buffer.toArray(ownerNFTs)
+    };
+    
+    // Get one NFT by ID with location name
+    public query func getOneNFTWithLocationName(id: Nat) : async ?NFTWithLocationName {
+        switch (nfts.get(id)) {
+            case (?nft) {
+                let locationName = switch (locations.get(nft.location)) {
+                    case (?location) { location.name };
+                    case null { "Unknown Location" };
+                };
+                
+                let nftWithLocationName: NFTWithLocationName = {
+                    id = nft.id;
+                    image = nft.image;
+                    description = nft.description;
+                    location = nft.location;
+                    locationName = locationName;
+                    contentType = nft.contentType;
+                    owner = nft.owner;
+                    timestamp = nft.timestamp;
+                };
+                
+                ?nftWithLocationName
+            };
+            case null { null };
+        }
+    };
+    
     // Additional helper functions for querying
     public shared query func getAllNFTs() : async [NFT] {
         Iter.toArray(nfts.vals())
@@ -333,7 +437,7 @@ actor NFTMinting {
         Iter.toArray(submissions.vals())
     };
     
-    public func getMyNFTs(owner: Principal) : async [NFT] {
+    public func getNFTsOwnedBy(owner: Principal) : async [NFT] {
         let ownerNFTs = Buffer.Buffer<NFT>(0);
         for ((_, nft) in nfts.entries()) {
             if (Principal.equal(nft.owner, owner)) {
@@ -343,7 +447,7 @@ actor NFTMinting {
         Buffer.toArray(ownerNFTs)
     };
 
-    public func getMySubmissions(owner: Principal) : async [Submission] {
+    public func getSubmissionsOwnedBy(owner: Principal) : async [Submission] {
         let ownerSubmissions = Buffer.Buffer<Submission>(0);
         for ((_, submission) in submissions.entries()) {
             if (Principal.equal(submission.owner, owner)) {
@@ -352,6 +456,36 @@ actor NFTMinting {
         };
         Buffer.toArray(ownerSubmissions)
     };
+
+        // Get user's submissions with their location names
+    public func getSubmissionsOwnedByWithLocationNames(owner: Principal) : async [SubmissionWithLocationName] {
+        let ownerSubmissions = Buffer.Buffer<SubmissionWithLocationName>(0);
+        
+        for ((_, submission) in submissions.entries()) {
+            if (Principal.equal(submission.owner, owner)) {
+                let locationName = switch (locations.get(submission.location)) {
+                    case (?location) { location.name };
+                    case null { "Unknown Location" };
+                };
+                
+                let submissionWithLocationName: SubmissionWithLocationName = {
+                    id = submission.id;
+                    image = submission.image;
+                    description = submission.description;
+                    location = submission.location;
+                    locationName = locationName;
+                    contentType = submission.contentType;
+                    owner = submission.owner;
+                    timestamp = submission.timestamp;
+                };
+                
+                ownerSubmissions.add(submissionWithLocationName);
+            };
+        };
+        
+        Buffer.toArray(ownerSubmissions)
+    };
+    
     
     // Helper function to get NFTs by location Principal
     public query func getNFTsByLocation(location: Principal) : async [NFT] {

@@ -1,6 +1,6 @@
-import { displayImageFromBytes, getLocationById } from "../lib/utils";
+import { displayImageFromBytes } from "../lib/utils";
 
-function NFTGallery({ displayedNFTs, setSelectedNFT, locations }) {
+function NFTGallery({ displayedNFTs, setSelectedNFT }) {
 
   return (
     <section className="nft-gallery-section">
@@ -32,7 +32,7 @@ function NFTGallery({ displayedNFTs, setSelectedNFT, locations }) {
                 <div className="nft-card-body">
                   <h3 className="nft-title">{nft.description}</h3>
                   <p className="nft-location">
-                    📍 {getLocationById(locations, nft.location)}
+                    📍 {nft.locationName}
                   </p>
 
                   <div className="nft-user">

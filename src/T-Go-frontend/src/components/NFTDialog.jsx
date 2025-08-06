@@ -1,7 +1,7 @@
 import { MapPin, Calendar } from "lucide-react";
-import { displayImageFromBytes, formatDate, formatTime, getLocationById } from "../lib/utils";
+import { displayImageFromBytes, formatDate, formatTime } from "../lib/utils";
 
-const NFTDialog = ({ selectedNFT, setSelectedNFT, locations }) => {
+const NFTDialog = ({ selectedNFT, setSelectedNFT }) => {
   // TODO: Check if the information is correctly displayed
   if (!selectedNFT) return null;
 
@@ -35,7 +35,7 @@ const NFTDialog = ({ selectedNFT, setSelectedNFT, locations }) => {
               <h3>Location</h3>
               <div className="nft-dialog-icon-text">
                 <MapPin className="nft-dialog-icon turquoise" />
-                <span>{getLocationById(locations, selectedNFT.location)}</span>
+                <span>{selectedNFT.locationName}</span>
               </div>
             </div>
 

@@ -86,6 +86,7 @@ useEffect(() => {
     updateActor();
   }
 
+  //console.log(authClient.getIdentity().getPrincipal().toString());
   return (
     <div className="my-gradient-background">
       <FloatingBackground />

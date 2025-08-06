@@ -89,7 +89,7 @@ function MintingHeader() {
       const imageBuffer = await formData.image.arrayBuffer();
       const imageBytes = new Uint8Array(imageBuffer);
       const principal = (await AuthClient.create()).getIdentity().getPrincipal();
-      const result = await T_Go_backend.mintNFT(
+      const result = await T_Go_backend.createSubmission(
         principal,
         imageBytes,
         formData.description,

@@ -9,12 +9,11 @@ function Gallery() {
   const [selectedNFT, setSelectedNFT] = useState(null);
   const [NFTs, setNFTs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [locations, setLocations] = useState([]);
 
   const fetchNFTs = async () => {
     try {
       // TODO: Check if the NFTs information is correctly displayed
-      const nfts = await T_Go_backend.getAllNFTs();
+      const nfts = await T_Go_backend.getAllNFTsWithLocationNames();
       setNFTs(nfts);
       setIsLoading(false);
     } catch (error) {
@@ -22,18 +21,8 @@ function Gallery() {
     }
   };
 
-  const fetchLocations = async () => {
-    try {
-      const locations = await T_Go_backend.getAllLocations();
-      setLocations(locations);
-    } catch (error) {
-      console.error("Error fetching locations:", error);
-    }
-  };
-
   useEffect(() => {
     fetchNFTs();
-    fetchLocations();
   }, []);
 
   if (isLoading) {
@@ -55,12 +44,10 @@ function Gallery() {
       <NFTGallery
         displayedNFTs={NFTs}
         setSelectedNFT={setSelectedNFT}
-        locations={locations}
       />
       <NFTDialog
         selectedNFT={selectedNFT}
         setSelectedNFT={setSelectedNFT}
-        locations={locations}
       />
     </>
   );

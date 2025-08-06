@@ -4,7 +4,7 @@ import { MapPin, Award, Clock, ArrowRight, User, Send } from "lucide-react";
 import { T_Go_backend } from "../../../declarations/T-Go-backend";
 import { Principal } from "@dfinity/principal";
 import { AuthClient } from "@dfinity/auth-client";
-import { displayImageFromBytes, getLocationById } from "../lib/utils";
+import { displayImageFromBytes } from "../lib/utils";
 
 // TODO: Replace with the actual NFT data
 const NFT = {
@@ -25,7 +25,6 @@ function Transfer() {
   const [error, setError] = useState("");
   const [nft, setNft] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [locations, setLocations] = useState([]);
   const nftId = searchParams.get("id");
   const navigate = useNavigate();
 
@@ -33,7 +32,7 @@ function Transfer() {
     // Simulate fetching NFT data
     const fetchNFT = async () => {
       try {
-        const fetchedNFT = await T_Go_backend.getOneNFT(parseInt(nftId));
+        const fetchedNFT = await T_Go_backend.getOneNFTWithLocationName(parseInt(nftId));
         setNft(fetchedNFT[0]);
         setIsLoading(false);
       } catch (err) {
@@ -42,15 +41,6 @@ function Transfer() {
         setIsLoading(false);
       }
     };
-    const fetchLocations = async () => {
-      try {
-        const fetchedLocations = await T_Go_backend.getAllLocations();
-        setLocations(fetchedLocations);
-      } catch (err) {
-        console.error("Failed to load locations:", err);
-      }
-    };
-    fetchLocations();
     fetchNFT();
   }, [nftId]);
 
@@ -131,7 +121,7 @@ function Transfer() {
               <h3>{nft.description}</h3>
               <div className="location">
                 <MapPin className="mappin" size={14} />
-                {getLocationById(locations, nft.location)}
+                {nft.locationName}
               </div>
               <div className="details">
                 <div>
